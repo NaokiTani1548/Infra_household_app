@@ -1,0 +1,12 @@
+variable "VPCID" {}
+variable "public1CID" {}
+variable "project" {}
+variable "env" {}
+variable "app_sg_id" {}
+variable "opmng_sg_id" {}
+variable "jar_s3_bucket" {}
+variable "jar_s3_key" {}
+variable "rds_endpoint" {}
+variable "db_username" {}
+variable "db_password" {}
+variable "key_pair" {}
