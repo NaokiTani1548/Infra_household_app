@@ -1,31 +1,10 @@
-ssh -i ./src/household-dev-keypair.pem ec2-user@X.X.X.X
-
-## サービスの状態確認
-
-$ sudo systemctl status springboot
-$ sudo systemctl restart springboot
-
-## ログの確認
-
-$ sudo journalctl -u springboot -f
-
-## Java プロセスの確認
-
-$ ps aux | grep java
-
-## ポートの LISTEN 確認
-
-$ sudo ss -ltnp | grep 8080
-$ curl http://X.X.X.X:8080/
-
-## MySQL 側
-
+# 実行手順
+$ terraform apply -auto-approve
+## DB側設定
+$ ssh -i ./src/household-dev-keypair.pem ec2-user@X.X.X.X
 $ sudo systemctl start mysqld
 $ sudo systemctl status mysqld
 $ sudo grep 'temporary password' /var/log/mysqld.log
-
-## 接続
-
 $ sudo mysql -u root -p
 $ ALTER USER 'root'@'localhost' IDENTIFIED BY 'Hitandrun48.';
 $ CREATE DATABASE household_budget;
@@ -43,14 +22,35 @@ category VARCHAR(255),
 date DATE,
 user_id BIGINT NOT NULL
 );
-
 $ INSERT INTO users (id, username, email, password) VALUES
 (1, 'test_user', 'test@example.com', 'hashed_password');
-
 $ CREATE USER 'admin'@'%' IDENTIFIED BY 'Hitandrun48.';
-
-# ctl+S でなぜかスラッシュ入るが消す ↓
-
-$ GRANT ALL PRIVILEGES ON household_budget.\* TO 'admin'@'%';
-
+$ GRANT ALL PRIVILEGES ON household_budget.* TO 'admin'@'%';
 $ FLUSH PRIVILEGES;
+
+## フロントコードを　http://[0-9\.]+:8080 -> http://XX.XX.XX.XX:8080
+### WSL
+$ cd ../../
+$ cd /mnt/c/Users/naoki/eclipse-workspace/eclipse-workspace2/household_account_app-v1/household-budget-frontend_v2
+$ aws s3 sync build/ s3://household-app-build-at-2025622 --delete
+
+## 以下にアクセス
+http://household-app-build-at-2025622.s3-website-ap-northeast-1.amazonaws.com/
+
+
+
+#　備忘録
+## app_server サービスの状態確認
+$ sudo systemctl status springboot
+$ sudo systemctl restart springboot
+### ログの確認
+$ sudo journalctl -u springboot -f
+### Java プロセスの確認
+$ ps aux | grep java
+### ポートの LISTEN 確認
+$ sudo ss -ltnp | grep 8080
+$ curl http://X.X.X.X:8080/
+
+## jarファイル生成(WSL)
+$ ./gradlew clean build
+$ cp build/libs/household_account_app-v1-0.0.1-SNAPSHOT.jar /mnt/c/Users/naoki/AWS_Infra_terraform/household_app/app_file/ 

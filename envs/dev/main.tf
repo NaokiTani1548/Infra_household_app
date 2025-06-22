@@ -52,6 +52,7 @@ module "s3" {
   project = var.project
   env = var.env
   jar_local_path = "../../app_file/household_account_app-v1-0.0.1-SNAPSHOT.jar"
+  frontend_name = "household-app-build-at-2025622"
 }
 
 module "db_server" {

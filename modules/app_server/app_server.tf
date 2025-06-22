@@ -59,6 +59,28 @@ resource "aws_instance" "app_server" {
 }
 
 # --------------------------------
+# Route53
+# --------------------------------
+# resource "aws_route53_zone" "route53_zone" {
+#   name = "naoki-personal.com"
+#   force_destroy = false
+
+#   tags = {
+#     Name = "${var.project}-${var.env}-domain"
+#     Project = var.project
+#     Env = var.env
+#   }
+# }
+
+# resource "aws_route53_record" "api" {
+#   zone_id = data.aws_route53_zone.main.zone_id
+#   name    = "api.example.com"
+#   type    = "A"
+#   ttl     = 300
+#   records = [aws_instance.app_server.public_ip]
+# }
+
+# --------------------------------
 # IAM Role
 # --------------------------------
 resource "aws_iam_role" "app_ec2_role" {
